@@ -48,8 +48,8 @@ private:
 
     static constexpr int MIN_PULSEWIDTH_US = 500;
     static constexpr int MAX_PULSEWIDTH_US = 2500;
-    static constexpr int MIN_DEGREE = -90;
-    static constexpr int MAX_DEGREE = 90;
+    static constexpr int MIN_DEGREE = 0;
+    static constexpr int MAX_DEGREE = 180;
 
     uint32_t angleToPulseWidth(int angle);
 };
