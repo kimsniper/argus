@@ -56,7 +56,7 @@ void servo_control_thread()
         return;
     }
 
-    const int angles[] = {0, 90, 180};
+    const int angles[] = {0, 90, 180, 90};
     size_t index = 0;
 
     while (true) {
