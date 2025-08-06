@@ -2,7 +2,6 @@
 build/
 
 # Configuration
-sdkconfig
 sdkconfig.old
 
 # VS Code settings
@@ -11,3 +10,5 @@ sdkconfig.old
 # CMake generated files
 CMakeCache.txt
 cmake-build-*
+
+dependencies.lock
