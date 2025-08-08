@@ -1,3 +1,0 @@
-[submodule "components/esp-who"]
-	path = components/esp-who
-	url = https://github.com/espressif/esp-who.git
