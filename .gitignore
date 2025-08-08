@@ -2,6 +2,7 @@
 build/
 
 # Configuration
+sdkconfig
 sdkconfig.old
 
 # VS Code settings
