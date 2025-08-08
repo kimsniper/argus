@@ -36,7 +36,7 @@
 #include "pwm_types.hpp"
 
 extern "C" {
-#include "driver/mcpwm_prelude.h"
+#include "driver/mcpwm.h"
 }
 
 class PwmHal {
@@ -46,10 +46,9 @@ public:
     Pwm_Error_t setCompareValue(uint32_t pulse_width_us);
 
 private:
-    mcpwm_timer_handle_t timer = nullptr;
-    mcpwm_oper_handle_t oper = nullptr;
-    mcpwm_cmpr_handle_t comparator = nullptr;
-    mcpwm_gen_handle_t generator = nullptr;
+    mcpwm_unit_t unit = MCPWM_UNIT_0;
+    mcpwm_timer_t timer = MCPWM_TIMER_0;
+    mcpwm_io_signals_t io_signal = MCPWM0A;
 
     static constexpr uint8_t PWM_GROUP_ID = 0;
 };
