@@ -40,7 +40,7 @@
 #include <freertos/task.h>
 #include <esp_log.h>
 #include "who_camera.h"
-#include "who_human_face_detection.hpp"
+#include "face_detection.hpp"
 
 #include "servo.hpp"
 
@@ -73,7 +73,7 @@ void servo_control_thread()
         servo1.setAngle(angle);
         servo2.setAngle(angle);
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        std::this_thread::sleep_for(std::chrono::milliseconds(20));
 
         index = (index + 1) % (sizeof(angles) / sizeof(angles[0]));
     }
