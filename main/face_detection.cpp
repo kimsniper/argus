@@ -21,6 +21,8 @@ static QueueHandle_t xQueueResult = NULL;
 static bool gEvent = true;
 static bool gReturnFB = true;
 
+static std::list<dl::detect::result_t> last_detection_results;
+
 static void task_process_handler(void *arg)
 {
     camera_fb_t *frame = NULL;
@@ -47,6 +49,7 @@ static void task_process_handler(void *arg)
                 {
                     draw_detection_result((uint16_t *)frame->buf, frame->height, frame->width, detect_results);
                     print_detection_result(detect_results);
+                    last_detection_results = detect_results;
                     is_detected = true;
                 }
             }
@@ -78,6 +81,10 @@ static void task_event_handler(void *arg)
     {
         xQueueReceive(xQueueEvent, &(gEvent), portMAX_DELAY);
     }
+}
+
+std::list<dl::detect::result_t> get_last_detection_results() {
+    return last_detection_results;
 }
 
 void register_human_face_detection(const QueueHandle_t frame_i,

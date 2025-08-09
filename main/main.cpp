@@ -46,36 +46,103 @@
 
 static QueueHandle_t xQueueAIFrame = NULL;
 
-// using namespace std::chrono_literals;
-
 static const char* TAG = "main";
 
-static Servo servo1, servo2;
+static Servo pan_servo, tilt_servo;
+
+class PIDController {
+private:
+    float Kp, Ki, Kd;
+    float integral = 0;
+    float prev_error = 0;
+    float output_min, output_max;
+    
+public:
+    PIDController(float p, float i, float d, float min, float max) 
+        : Kp(p), Ki(i), Kd(d), output_min(min), output_max(max) {}
+    
+    float calculate(float setpoint, float pv, float dt) {
+        float error = setpoint - pv;
+        integral += error * dt;
+        float derivative = (error - prev_error) / dt;
+        prev_error = error;
+        
+        float output = Kp * error + Ki * integral + Kd * derivative;
+        return std::max(output_min, std::min(output, output_max));
+    }
+    
+    void reset() {
+        integral = 0;
+        prev_error = 0;
+    }
+};
+
+static PIDController pan_pid(0.1, 0.01, 0.05, -45, 45);
+static PIDController tilt_pid(0.1, 0.01, 0.05, -45, 45);
+
+const int FRAME_WIDTH = 320;
+const int FRAME_HEIGHT = 240;
+
+const int TARGET_X = FRAME_WIDTH / 2;
+const int TARGET_Y = FRAME_HEIGHT / 2;
+
+static int pan_angle = 90;
+static int tilt_angle = 90; 
 
 void servo_control_thread()
 {
-    if (servo1.attach(12) != Pwm_Error_t::PWM_OK) {
-        std::cerr << "Failed to attach servo" << std::endl;
+    if (pan_servo.attach(12) != Pwm_Error_t::PWM_OK) {
+        ESP_LOGE(TAG, "Failed to attach pan servo");
         return;
     }
 
-    if (servo2.attach(13) != Pwm_Error_t::PWM_OK) {
-        std::cerr << "Failed to attach servo" << std::endl;
+    if (tilt_servo.attach(13) != Pwm_Error_t::PWM_OK) {
+        ESP_LOGE(TAG, "Failed to attach tilt servo");
         return;
     }
 
-    const int angles[] = {0, 90, 180, 90};
-    size_t index = 0;
+    pan_servo.setAngle(pan_angle);
+    tilt_servo.setAngle(tilt_angle);
+
+    const auto loop_delay = std::chrono::milliseconds(20);
+    auto last_time = std::chrono::steady_clock::now();
 
     while (true) {
-        int angle = angles[index];
-        std::cout << "Servo angle: " << angle << " deg" << std::endl;
-        servo1.setAngle(angle);
-        servo2.setAngle(angle);
+        auto now = std::chrono::steady_clock::now();
+        float dt = std::chrono::duration<float>(now - last_time).count();
+        last_time = now;
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(20));
+        auto results = get_last_detection_results();
+        
+        if (!results.empty()) {
+            auto face = results.front();
+            
+            if (face.keypoint.size() >= 6) {
+                int nose_x = face.keypoint[4];
+                int nose_y = face.keypoint[5];
+                
+                ESP_LOGI(TAG, "Nose at (%d, %d)", nose_x, nose_y);
+                
+                float pan_output = pan_pid.calculate(TARGET_X, nose_x, dt);
+                float tilt_output = tilt_pid.calculate(TARGET_Y, nose_y, dt);
+                
+                pan_angle += pan_output;
+                tilt_angle += tilt_output;
+                
+                pan_angle = std::max(0, std::min(180, pan_angle));
+                tilt_angle = std::max(0, std::min(180, tilt_angle));
+                
+                ESP_LOGI(TAG, "Pan servo angle: %d)", pan_angle);
+                ESP_LOGI(TAG, "Tilt servo angle: %d)", tilt_angle);
+                pan_servo.setAngle(pan_angle);
+                tilt_servo.setAngle(tilt_angle);
+            }
+        } else {
+            pan_pid.reset();
+            tilt_pid.reset();
+        }
 
-        index = (index + 1) % (sizeof(angles) / sizeof(angles[0]));
+        std::this_thread::sleep_for(loop_delay);
     }
 }
 
