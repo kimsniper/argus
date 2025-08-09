@@ -39,7 +39,7 @@
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 #include <esp_log.h>
-#include "who_camera.h"
+#include "app_camera.h"
 #include "face_detection.hpp"
 
 #include "servo.hpp"
