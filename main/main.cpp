@@ -77,8 +77,8 @@ public:
     }
 };
 
-static PIDController pan_pid(0.1, 0.01, 0.05, -45, 45);
-static PIDController tilt_pid(0.1, 0.01, 0.05, -45, 45);
+static PIDController pan_pid(0.05, 0.0, 0.0, -45, 45);
+static PIDController tilt_pid(0.05, 0.0, 0.0, -45, 45);
 
 const int FRAME_WIDTH = 320;
 const int FRAME_HEIGHT = 240;
@@ -87,7 +87,7 @@ const int TARGET_X = FRAME_WIDTH / 2;
 const int TARGET_Y = FRAME_HEIGHT / 2;
 
 static int pan_angle = 90;
-static int tilt_angle = 90; 
+static int tilt_angle = 30; 
 
 void servo_control_thread()
 {
@@ -130,10 +130,10 @@ void servo_control_thread()
                 tilt_angle += tilt_output;
                 
                 pan_angle = std::max(0, std::min(180, pan_angle));
-                tilt_angle = std::max(0, std::min(180, tilt_angle));
+                tilt_angle = std::max(0, std::min(170, tilt_angle));
                 
-                ESP_LOGI(TAG, "Pan servo angle: %d)", pan_angle);
-                ESP_LOGI(TAG, "Tilt servo angle: %d)", tilt_angle);
+                ESP_LOGI(TAG, "Pan servo angle: %d", pan_angle);
+                ESP_LOGI(TAG, "Tilt servo angle: %d", tilt_angle);
                 pan_servo.setAngle(pan_angle);
                 tilt_servo.setAngle(tilt_angle);
             }
