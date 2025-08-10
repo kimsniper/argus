@@ -127,7 +127,7 @@ void servo_control_thread()
                 float tilt_output = tilt_pid.calculate(TARGET_Y, nose_y, dt);
                 
                 pan_angle += pan_output;
-                tilt_angle += tilt_output;
+                tilt_angle -= tilt_output;
                 
                 pan_angle = std::max(0, std::min(180, pan_angle));
                 tilt_angle = std::max(0, std::min(170, tilt_angle));
