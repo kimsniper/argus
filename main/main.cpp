@@ -88,6 +88,10 @@ const int TARGET_Y = FRAME_HEIGHT / 2;
 
 static int pan_angle = 90;
 static int tilt_angle = 30; 
+static int pan_angle_prev = 0;
+static int tilt_angle_prev = 0; 
+int nose_x_prev = 0;
+int nose_y_prev = 0;
 
 void servo_control_thread()
 {
@@ -121,8 +125,13 @@ void servo_control_thread()
                 int nose_x = face.keypoint[4];
                 int nose_y = face.keypoint[5];
                 
-                ESP_LOGI(TAG, "Nose at (%d, %d)", nose_x, nose_y);
-                
+                if ((nose_x != nose_x_prev) || (nose_y != nose_y_prev))
+                {
+                    ESP_LOGI(TAG, "Nose at (%d, %d)", nose_x, nose_y);
+                    nose_x_prev = nose_x;
+                    nose_y_prev = nose_y;
+                }
+
                 float pan_output = pan_pid.calculate(TARGET_X, nose_x, dt);
                 float tilt_output = tilt_pid.calculate(TARGET_Y, nose_y, dt);
                 
@@ -132,10 +141,15 @@ void servo_control_thread()
                 pan_angle = std::max(0, std::min(180, pan_angle));
                 tilt_angle = std::max(0, std::min(170, tilt_angle));
                 
-                ESP_LOGI(TAG, "Pan servo angle: %d", pan_angle);
-                ESP_LOGI(TAG, "Tilt servo angle: %d", tilt_angle);
-                pan_servo.setAngle(pan_angle);
-                tilt_servo.setAngle(tilt_angle);
+                if ((pan_angle != pan_angle_prev) || (tilt_angle != tilt_angle_prev))
+                {
+                    ESP_LOGI(TAG, "Pan servo angle: %d", pan_angle);
+                    ESP_LOGI(TAG, "Tilt servo angle: %d", tilt_angle);
+                    pan_servo.setAngle(pan_angle);
+                    tilt_servo.setAngle(tilt_angle);
+                    pan_angle_prev = pan_angle;
+                    tilt_angle_prev = tilt_angle;
+                }
             }
         } else {
             pan_pid.reset();
