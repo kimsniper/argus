@@ -39,7 +39,10 @@ class Servo {
 public:
     Servo();
 
-    Pwm_Error_t attach(uint8_t gpio_num);
+    Pwm_Error_t attach(uint8_t gpio_num,
+                       mcpwm_unit_t unit = MCPWM_UNIT_0,
+                       mcpwm_timer_t timer = MCPWM_TIMER_0,
+                       mcpwm_io_signals_t signal = MCPWM0A);
     void setAngle(int angle);
 
 private:

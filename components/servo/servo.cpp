@@ -33,8 +33,11 @@
 
 Servo::Servo() {}
 
-Pwm_Error_t Servo::attach(uint8_t gpio_num) {
-    return pwm.init(gpio_num, 50, 1000000); // 50Hz, 1us resolution
+Pwm_Error_t Servo::attach(uint8_t gpio_num,
+                          mcpwm_unit_t unit,
+                          mcpwm_timer_t timer,
+                          mcpwm_io_signals_t signal) {
+    return pwm.init(gpio_num, 50, 1000000, unit, timer, signal); // 50Hz, 1us resolution
 }
 
 void Servo::setAngle(int angle) {

@@ -41,13 +41,17 @@ extern "C" {
 
 class PwmHal {
 public:
-    Pwm_Error_t init(uint8_t gpio_num, uint32_t freq_hz, uint32_t resolution_hz);
+    Pwm_Error_t init(uint8_t gpio_num, uint32_t freq_hz, uint32_t resolution_hz,
+                     mcpwm_unit_t mcpwm_unit = MCPWM_UNIT_0,
+                     mcpwm_timer_t mcpwm_timer = MCPWM_TIMER_0,
+                     mcpwm_io_signals_t mcpwm_signal = MCPWM0A);
+
     Pwm_Error_t setPulseWidth(uint32_t pulse_width_us);
 
 private:
-    mcpwm_unit_t unit = MCPWM_UNIT_0;
-    mcpwm_timer_t timer = MCPWM_TIMER_0;
-    mcpwm_io_signals_t io_signal = MCPWM0A;
+    mcpwm_unit_t unit;
+    mcpwm_timer_t timer;
+    mcpwm_io_signals_t io_signal;
 
     static constexpr uint8_t PWM_GROUP_ID = 0;
 

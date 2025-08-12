@@ -31,7 +31,12 @@
 
 #include "pwm_hal.hpp"
 
-Pwm_Error_t PwmHal::init(uint8_t gpio_num, uint32_t freq_hz, uint32_t resolution_hz) {
+Pwm_Error_t PwmHal::init(uint8_t gpio_num, uint32_t freq_hz, uint32_t resolution_hz,
+                         mcpwm_unit_t mcpwm_unit, mcpwm_timer_t mcpwm_timer,
+                         mcpwm_io_signals_t mcpwm_signal) {
+    unit = mcpwm_unit;
+    timer = mcpwm_timer;
+    io_signal = mcpwm_signal;
     return setup(gpio_num, freq_hz, resolution_hz);
 }
 
