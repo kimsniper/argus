@@ -41,9 +41,8 @@ extern "C" {
 
 class PwmHal {
 public:
-
-    Pwm_Error_t setup(uint8_t gpio_num, uint32_t freq_hz, uint32_t resolution_hz);
-    Pwm_Error_t setCompareValue(uint32_t pulse_width_us);
+    Pwm_Error_t init(uint8_t gpio_num, uint32_t freq_hz, uint32_t resolution_hz);
+    Pwm_Error_t setPulseWidth(uint32_t pulse_width_us);
 
 private:
     mcpwm_unit_t unit = MCPWM_UNIT_0;
@@ -51,6 +50,9 @@ private:
     mcpwm_io_signals_t io_signal = MCPWM0A;
 
     static constexpr uint8_t PWM_GROUP_ID = 0;
+
+    Pwm_Error_t setup(uint8_t gpio_num, uint32_t freq_hz, uint32_t resolution_hz);
+    Pwm_Error_t setCompareValue(uint32_t pulse_width_us);
 };
 
 #endif // PWM_HAL_HPP

@@ -31,6 +31,14 @@
 
 #include "pwm_hal.hpp"
 
+Pwm_Error_t PwmHal::init(uint8_t gpio_num, uint32_t freq_hz, uint32_t resolution_hz) {
+    return setup(gpio_num, freq_hz, resolution_hz);
+}
+
+Pwm_Error_t PwmHal::setPulseWidth(uint32_t pulse_width_us) {
+    return setCompareValue(pulse_width_us);
+}
+
 Pwm_Error_t PwmHal::setup(uint8_t gpio_num, uint32_t freq_hz, uint32_t resolution_hz) {
     // Configure GPIO
     mcpwm_gpio_init(unit, io_signal, gpio_num);

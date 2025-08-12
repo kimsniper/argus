@@ -31,7 +31,7 @@
 
 #include "servo.hpp"
 
-Servo::Servo() : pwm(pwm_hal) {}
+Servo::Servo() {}
 
 Pwm_Error_t Servo::attach(uint8_t gpio_num) {
     return pwm.init(gpio_num, 50, 1000000); // 50Hz, 1us resolution

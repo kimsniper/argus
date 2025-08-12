@@ -33,7 +33,7 @@
 #define SERVO_HPP
 
 #include <cstdint>
-#include "pwm.hpp"
+#include "pwm_hal.hpp"
 
 class Servo {
 public:
@@ -43,8 +43,7 @@ public:
     void setAngle(int angle);
 
 private:
-    PwmHal pwm_hal;
-    Pwm pwm;
+    PwmHal pwm;
 
     static constexpr int MIN_PULSEWIDTH_US = 500;
     static constexpr int MAX_PULSEWIDTH_US = 2500;
