@@ -1,6 +1,6 @@
 # ARGUS
 
-**ARGUS** (*Autonomous Real-time Gimbal for User Sensing*) is a face recognition and tracking system powered by the **ESP32-CAM** and **ESP-IDF**. This project utilizes real-time visual feedback to control a pan-tilt gimbal, keeping a detected face centered in view.
+**ARGUS** (*Autonomous Real-time Gimbal for User Sensing*) is a face recognition and tracking system. This project utilizes real-time visual feedback to control a pan-tilt gimbal, keeping a detected face centered in view.
 
 ---
 
@@ -13,6 +13,16 @@
 
 ---
 
+## Face Tracking Flow
+
+- Camera captures frame.
+- Frame is passed to esp-dl for face detection.
+- Detected face coordinates are compared against frame center.
+- PID control logic calculates error values.
+- Servo adjustment commands (to be integrated) use calculated PD output.
+
+---
+
 ## Hardware
 
 - ESP32-CAM (AI-Thinker)
@@ -22,13 +32,28 @@
 
 ---
 
+## Requirements
+
+- ESP-IDF v4.4 (ESP32 recommended)
+- Submodules:
+  - [esp-dl](https://github.com/espressif/esp-dl)
+  - [esp32-camera](https://github.com/espressif/esp32-camera)
+
+Make sure submodules are initialized and updated:
+
+```bash
+git submodule update --init --recursive
+```
+
+---
+
 ## Getting Started
 
 1. Set up [ESP-IDF](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/get-started/index.html)
 2. Clone this repository:
    ```bash
-   git clone https://github.com/kimsniper/argus.git
+   git clone --recursive https://github.com/kimsniper/argus.git
    cd argus
    idf.py set-target esp32
    idf.py build
-   idf.py -p /dev/ttyUSB0 flash monitor
+   idf.py flash monitor
