@@ -1,0 +1,15 @@
+# Build output
+build/
+
+# Configuration
+sdkconfig
+sdkconfig.old
+
+# VS Code settings
+.vscode/
+
+# CMake generated files
+CMakeCache.txt
+cmake-build-*
+
+dependencies.lock
