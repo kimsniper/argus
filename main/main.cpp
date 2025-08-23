@@ -83,7 +83,7 @@ static PIDController tilt_pid(0.006, 0.0, 0.003, -45, 45);
 const int FRAME_WIDTH = 320;
 const int FRAME_HEIGHT = 240;
 
-const int TARGET_X = FRAME_WIDTH / 2;
+const int TARGET_X = (FRAME_WIDTH / 2) - 10;
 const int TARGET_Y = FRAME_HEIGHT / 2;
 
 static int pan_angle = 90;
@@ -96,14 +96,14 @@ int nose_y_prev = 0;
 void servo_control_thread()
 {
     if (pan_servo.attach(12, MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM0A) != Pwm_Error_t::PWM_OK) {
-    ESP_LOGE(TAG, "Failed to attach pan servo");
-    return;
-}
+        ESP_LOGE(TAG, "Failed to attach pan servo");
+        return;
+    }
 
-if (tilt_servo.attach(13, MCPWM_UNIT_0, MCPWM_TIMER_1, MCPWM1A) != Pwm_Error_t::PWM_OK) {
-    ESP_LOGE(TAG, "Failed to attach tilt servo");
-    return;
-}
+    if (tilt_servo.attach(13, MCPWM_UNIT_0, MCPWM_TIMER_1, MCPWM1A) != Pwm_Error_t::PWM_OK) {
+        ESP_LOGE(TAG, "Failed to attach tilt servo");
+        return;
+    }
 
     pan_servo.setAngle(pan_angle);
     tilt_servo.setAngle(tilt_angle);
