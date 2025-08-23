@@ -57,3 +57,9 @@ git submodule update --init --recursive
    idf.py set-target esp32
    idf.py build
    idf.py flash monitor
+
+---
+
+## Video Demo
+
+![Demo](./images/demo.gif)
