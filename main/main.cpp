@@ -77,8 +77,8 @@ public:
     }
 };
 
-static PIDController pan_pid(0.006, 0.0, 0.003, -45, 45);
-static PIDController tilt_pid(0.006, 0.0, 0.003, -45, 45);
+static PIDController pan_pid(0.008, 0.001, 0.002, -20, 20);
+static PIDController tilt_pid(0.008, 0.001, 0.002, -20, 20);
 
 const int FRAME_WIDTH = 320;
 const int FRAME_HEIGHT = 240;
@@ -132,24 +132,26 @@ void servo_control_thread()
                     nose_y_prev = nose_y;
                 }
                 
-                if (abs(nose_x - TARGET_X) > 3) {
+                if (abs(nose_x - TARGET_X) > 5) {
                     float pan_output = pan_pid.calculate(TARGET_X, nose_x, dt);
-                    pan_angle += pan_output;
+                    int rounded_output = static_cast<int>(pan_output + (pan_output > 0 ? 0.5f : -0.5f));
+                    pan_angle += rounded_output;
                     pan_angle = std::max(0, std::min(180, pan_angle));
                     pan_servo.setAngle(pan_angle);
                 }
                 else {
-                    // pan_pid.reset();
+                    pan_pid.reset();
                 }
 
-                if (abs(nose_y - TARGET_Y) > 3) {
+                if (abs(nose_y - TARGET_Y) > 5) {
                     float tilt_output = tilt_pid.calculate(TARGET_Y, nose_y, dt);
-                    tilt_angle -= tilt_output;
+                    int rounded_output = static_cast<int>(tilt_output + (tilt_output > 0 ? 0.5f : -0.5f));
+                    tilt_angle -= rounded_output;
                     tilt_angle = std::max(0, std::min(170, tilt_angle));
                     tilt_servo.setAngle(tilt_angle);
                 }
                 else {
-                    // tilt_pid.reset();
+                    tilt_pid.reset();
                 }
                 
                 if ((pan_angle != pan_angle_prev) || (tilt_angle != tilt_angle_prev))
@@ -179,7 +181,7 @@ extern "C" void app_main(void)
     // Servo thread
     esp_pthread_cfg_t cfg_servo = esp_pthread_get_default_config();
     cfg_servo.stack_size = 4096;
-    cfg_servo.prio = 6;
+    cfg_servo.prio = 5;
     cfg_servo.pin_to_core = 0;
     cfg_servo.thread_name = "servo_thread";
 
