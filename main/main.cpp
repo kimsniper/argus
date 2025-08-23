@@ -77,8 +77,8 @@ public:
     }
 };
 
-static PIDController pan_pid(0.008, 0.001, 0.002, -20, 20);
-static PIDController tilt_pid(0.008, 0.001, 0.002, -20, 20);
+static PIDController pan_pid(0.006, 0.0006, 0.002, -45, 45);
+static PIDController tilt_pid(0.008, 0.0006, 0.002, -45, 45);
 
 const int FRAME_WIDTH = 320;
 const int FRAME_HEIGHT = 240;
@@ -132,7 +132,7 @@ void servo_control_thread()
                     nose_y_prev = nose_y;
                 }
                 
-                if (abs(nose_x - TARGET_X) > 5) {
+                if (abs(nose_x - TARGET_X) > 2) {
                     float pan_output = pan_pid.calculate(TARGET_X, nose_x, dt);
                     int rounded_output = static_cast<int>(pan_output + (pan_output > 0 ? 0.5f : -0.5f));
                     pan_angle += rounded_output;
@@ -143,7 +143,7 @@ void servo_control_thread()
                     pan_pid.reset();
                 }
 
-                if (abs(nose_y - TARGET_Y) > 5) {
+                if (abs(nose_y - TARGET_Y) > 2) {
                     float tilt_output = tilt_pid.calculate(TARGET_Y, nose_y, dt);
                     int rounded_output = static_cast<int>(tilt_output + (tilt_output > 0 ? 0.5f : -0.5f));
                     tilt_angle -= rounded_output;
