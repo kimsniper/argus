@@ -6,7 +6,7 @@
 
 ## Features
 
-- Real-time face detection and recognition using ESP-WHO
+- Real-time face detection and recognition using ESP-DL
 - Gimbal control (pan/tilt) via PWM-driven MG90/SG90 servos
 - Fully embedded — no external PC required
 - Built with ESP-IDF for maximum performance
