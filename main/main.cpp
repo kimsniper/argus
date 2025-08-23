@@ -135,28 +135,27 @@ void servo_control_thread()
                 if (abs(nose_x - TARGET_X) > 3) {
                     float pan_output = pan_pid.calculate(TARGET_X, nose_x, dt);
                     pan_angle += pan_output;
+                    pan_angle = std::max(0, std::min(180, pan_angle));
+                    pan_servo.setAngle(pan_angle);
                 }
                 else {
-                    pan_pid.reset();
+                    // pan_pid.reset();
                 }
 
                 if (abs(nose_y - TARGET_Y) > 3) {
                     float tilt_output = tilt_pid.calculate(TARGET_Y, nose_y, dt);
                     tilt_angle -= tilt_output;
+                    tilt_angle = std::max(0, std::min(170, tilt_angle));
+                    tilt_servo.setAngle(tilt_angle);
                 }
                 else {
-                    tilt_pid.reset();
+                    // tilt_pid.reset();
                 }
-                
-                pan_angle = std::max(0, std::min(180, pan_angle));
-                tilt_angle = std::max(0, std::min(170, tilt_angle));
                 
                 if ((pan_angle != pan_angle_prev) || (tilt_angle != tilt_angle_prev))
                 {
                     ESP_LOGI(TAG, "Pan servo angle: %d", pan_angle);
                     ESP_LOGI(TAG, "Tilt servo angle: %d", tilt_angle);
-                    pan_servo.setAngle(pan_angle);
-                    tilt_servo.setAngle(tilt_angle);
                     pan_angle_prev = pan_angle;
                     tilt_angle_prev = tilt_angle;
                 }
