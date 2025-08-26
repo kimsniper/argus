@@ -1,6 +1,6 @@
 # ARGUS
 
-**ARGUS** (*Autonomous Real-time Gimbal for User Sensing*) is a face recognition and tracking system. This project utilizes real-time visual feedback to control a pan-tilt gimbal, keeping a detected face centered in view.
+**ARGUS** (*Autonomous Real-time Gimbal for User Sensing*) is a face detection and tracking system. This project utilizes real-time visual feedback to control a pan-tilt gimbal, keeping a detected face centered in view.
 
 ---
 
@@ -63,3 +63,5 @@ git submodule update --init --recursive
 ## Video Demo
 
 ![Demo](./images/demo.gif)
+
+https://www.linkedin.com/posts/mezaeldocoy_embeddedai-esp32-robotics-activity-7365576737612562432-wWZq?utm_source=share&utm_medium=member_android&rcm=ACoAACmY-xYBsymlj36REm4IhJ-hJ5gTkK0J9l0
